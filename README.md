@@ -1,10 +1,10 @@
 # DPP
 MSc - Dissertation Project
-# auth-lib
+# jwt-auth-lib
 An Express authentication library that implements jwt rotation with redis
 
 # usage 
-Import AuthLib and Create an Instance
+Import JWTAuthLib and Create an Instance
 
 ```
 import express, { Express } from "express";
