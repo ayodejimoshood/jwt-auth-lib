@@ -99,7 +99,7 @@ AuthStrategy.useJwtValidate(({ sub }: { sub: string; email: string }, done) => {
 ```
 
 Once the above validation has been registered, we need to pass the AuthStrategy Router to express, using the **getAuthRouter()** method,
-the route path used can be configured through the **authRoute** param passed to **AuthLibInstance.init** or during the auth lib intantiation
+the route path used can be configured through the **authRoute** param passed to **AuthLibInstance.init** or during the auth lib initiation
 
 ```
 
