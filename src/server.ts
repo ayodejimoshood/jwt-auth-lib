@@ -5,8 +5,8 @@ import { JWTAuthLib } from "./lib";
 import { loadAllDb, userDb } from "./db";
 
 type User = {
-    _id: string;
-    email: string;
+  _id: string;
+  email: string;
 };
 
 type LoginPayload = {
@@ -24,19 +24,26 @@ const app: Express = express();
 const AuthStrategy = new JWTAuthLib();
 
 AuthStrategy.init({
-    redisUrl: APP_CONFIG.REDIS_URL,
-    // redisConfig: {host:"redis-14649.c85.us-east-1-2.ec2.cloud.redislabs.com", port: 14649, username:"default", password: 'laLBzbtYOzTZbyU9CEMNAcoVAV8d5uE0'},
-    mapUserToJwtPayload: (user: User) => ({ sub: user._id, email: user?.email }),
-    jwtConfig: {
-      accessTokenSecret: APP_CONFIG.JWT_ACCESS_TOKEN_SECRET,
-      refreshTokenSecret: APP_CONFIG.JWT_REFRESH_TOKEN_SECRET,
-      expiresIn: {
-        access: "1m",
-        refresh: "7d",
-      },
-      issuer: "api.ayo.xyz",
-      audience: ["ayo.xyz"],
+  // redisConfig: {
+  //   host: "<redis-host-url>", // redis host url placeholder
+  //   port: 6379,
+  //   username: "<redis-username>",
+  //   password: "<redis-password>",
+  // },
+  // authRoute: "<custom-auth-route>", // placeholder
+  redisUrl: APP_CONFIG.REDIS_URL,
+
+  mapUserToJwtPayload: (user: User) => ({ sub: user._id, email: user?.email }),
+  jwtConfig: {
+    accessTokenSecret: APP_CONFIG.JWT_ACCESS_TOKEN_SECRET,
+    refreshTokenSecret: APP_CONFIG.JWT_REFRESH_TOKEN_SECRET,
+    expiresIn: {
+      access: "1m",
+      refresh: "7d",
     },
+    issuer: "api.ayo.xyz",
+    audience: ["ayo.xyz"],
+  },
 });
 
 AuthStrategy.useLoginValidate((loginInfo: LoginPayload, done) => {
@@ -62,8 +69,8 @@ AuthStrategy.useRegisterValidate((newUser: RegisterPayload, done) => {
     }
 
     // developer handling request payload validation
-    if(!newUser.email || !newUser.password) {
-      return done(null, "Please ensure email or password is provided")
+    if (!newUser.email || !newUser.password) {
+      return done(null, "Please ensure email or password is provided");
     }
 
     // create user
@@ -88,31 +95,34 @@ AuthStrategy.useJwtValidate(({ sub }: { sub: string; email: string }, done) => {
 app.use(express.json());
 app.use(cors());
 
+// Mount Optional Auth Router Middleware
+app.use(AuthStrategy.getAuthRouter()); // base route can be configured in jwt-auth-lib initialization
+
 // Protect a route using authenticateJwt middleware
 app.get("/", (req, res) => {
-    // The authenticated user's information can be accessed using req.user
-    res.send("server is up");
+  // The authenticated user's information can be accessed using req.user
+  res.send("server is up");
 });
 
 // Usage of Handlers
 
 // Protect a route using authenticateJwt middleware - Validates Access Token
-app.get("/auth/user", AuthStrategy.authenticateJwt(), (req, res) => {
-  // The authenticated user's information can be accessed using req.user
-  res.json({ user: req.user });
-});
+// app.get("/auth/user", AuthStrategy.authenticateJwt(), (req, res) => {
+//   // The authenticated user's information can be accessed using req.user
+//   res.json({ user: req.user });
+// });
 
-// Handle refresh token route
-app.post("/auth/refresh", AuthStrategy.handleRefreshToken());
+// // Handle refresh token route
+// app.post("/auth/refresh", AuthStrategy.handleRefreshToken());
 
-// Handle Logout Route
-app.post("/auth/logout", AuthStrategy.handleRevokeAccessToken());
+// // Handle Logout Route
+// app.post("/auth/logout", AuthStrategy.handleRevokeAccessToken());
 
-// Handle Register Route
-app.post("/auth/register", AuthStrategy.handleRegister);
+// // Handle Register Route
+// app.post("/auth/register", AuthStrategy.handleRegister);
 
-// Handle Login Route
-app.post("/auth/login", AuthStrategy.handleLogin);
+// // Handle Login Route
+// app.post("/auth/login", AuthStrategy.handleLogin);
 
 // Handle Get User Route
 // app.get("/auth/user", AuthStrategy.handleGetUser);
