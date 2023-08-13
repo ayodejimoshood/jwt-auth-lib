@@ -40,7 +40,8 @@ const tokenSchema = new Schema(
 
 export type AuthInitProps = {
     jwtConfig: JWT_CONFIG;
-    redisUrl: string;
+    redisUrl?: string;
+    redisConfig?: {host:string, username: string, password:string, port: number};
     authRoute?: string;
     mapUserToJwtPayload: (
       user: any
@@ -81,30 +82,41 @@ class JWTAuthLib {
     private redis: RedisClientType | undefined;
     private authRoute?: string = defaultInitProps.authRoute;
     public router: Router = Router();
+    private validateFns: Record<string, ValidateFn> = {};
     public mapUserToJwtPayload = defaultInitProps.mapUserToJwtPayload;
     private tokenRepository: Repository | undefined;
 
     constructor(props: AuthInitProps = defaultInitProps) {
-        this.init(props);
+        this.init(props,!!props.redisUrl||!!props.redisConfig);
     }
     
-    init({ jwtConfig, redisUrl, authRoute, mapUserToJwtPayload }: AuthInitProps) {
+    init({ jwtConfig, redisUrl, redisConfig, authRoute, mapUserToJwtPayload }: AuthInitProps, instantiateRedis:boolean=true) {
         this.jwtConfig = jwtConfig;
         this.authRoute = authRoute || this.authRoute;
         this.mapUserToJwtPayload = mapUserToJwtPayload;
         this.router = Router();
-        this.redis = createClient({
-          url: redisUrl,
-        });
-        this.tokenRepository = new Repository(tokenSchema, this.redis);
-        this.registerRedisEvents();
-        this.redis.connect();
+        
+        // console.log("redis://default:laLBzbtYOzTZbyU9CEMNAcoVAV8d5uE0@redis-14649.c85.us-east-1-2.ec2.cloud.redislabs.com:14649")
+        if(instantiateRedis) {
+          const config = redisConfig?{
+            socket: {
+              host: redisConfig.host,
+              port: redisConfig.port
+            }, password: redisConfig.password,
+            username: redisConfig.username}:{url:redisUrl
+          }
+          this.redis = createClient(config);
+          this.tokenRepository = new Repository(tokenSchema, this.redis);
+          this.registerRedisEvents();
+          this.redis.connect();
+        }
     }
     
     registerRedisEvents() {
         if (this.redis) {
-          this.redis?.on("error", (err) =>
-            console.log("[Redis Auth Client]:", err)
+            this.redis?.on("error", (err) => { 
+                console.log("[Redis Auth Client]:", err)
+            }
           );
           this.redis.on("connect", () =>
             console.log("[Redis Auth Client]:connected to redis successfully ")
@@ -116,6 +128,19 @@ class JWTAuthLib {
             console.log("[Redis Auth Client]:reconnecting to redis ")
           );
         }
+    }
+
+    useJwtValidate(
+        validateFn: (jwtPayload: any, done: (user: any, err: any) => void) => void
+    ){
+        this.validateFns["jwt"] = validateFn;
+    }
+    useLoginValidate(validateFn: ValidateFn) {
+        this.validateFns[ALLOWED_ROUTES.LOGIN] = validateFn;
+    }
+    
+    useRegisterValidate(validateFn: ValidateFn) {
+        this.validateFns[ALLOWED_ROUTES.REGISTER] = validateFn;
     }
 }
 

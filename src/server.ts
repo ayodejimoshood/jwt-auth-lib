@@ -7,6 +7,7 @@ type User = {
     _id: string;
     email: string;
 };
+console.log(APP_CONFIG)
 
 const app: Express = express();
 
@@ -14,6 +15,7 @@ const AuthStrategy = new JWTAuthLib();
 
 AuthStrategy.init({
     redisUrl: APP_CONFIG.REDIS_URL,
+    // redisConfig: {host:"redis-14649.c85.us-east-1-2.ec2.cloud.redislabs.com", port: 14649, username:"default", password: 'laLBzbtYOzTZbyU9CEMNAcoVAV8d5uE0'},
     mapUserToJwtPayload: (user: User) => ({ sub: user._id, email: user?.email }),
     jwtConfig: {
       accessTokenSecret: APP_CONFIG.JWT_ACCESS_TOKEN_SECRET,
