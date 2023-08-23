@@ -1,7 +1,7 @@
 import express, { Express } from "express";
 import cors from "cors";
 import APP_CONFIG from "./_config";
-import { JWTAuthLib } from "./lib";
+import { JWTAuthLib, AuthInitProps } from "./lib";
 import { loadAllDb, userDb } from "./db";
 
 type User = {

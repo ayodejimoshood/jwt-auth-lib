@@ -1,6 +1,10 @@
 
 # Getting Started with JwtAuthLib
 
+# website: 
+
+🌏 - visit our website at https://jwtauthlib.netlify.app, to explore and read more about library usage 
+
 ## Purpose
 
 JwtAuthLib is a powerful authentication library for Node.js applications, designed to simplify and secure the authentication process. It provides a straightforward way to handle user authentication and token management, using JSON Web Tokens (JWT) and Redis for efficient token storage.
@@ -23,10 +27,10 @@ yarn add jwt-auth-lib
 
 ### Initializing Auth Lib
 
-To begin using AuthLib, you need to initialize the library with the required configuration:
+To begin using JWTAuthLib, you need to initialize the library with the required configuration:
 
 ```tsx
-import { AuthLib, AuthInitProps } from "jwt-auth-lib";
+import { JWTAuthLib, AuthInitProps } from "jwt-auth-lib";
 
 const jwtConfig = {
   refreshTokenSecret: "your-refresh-token-secret",
@@ -52,7 +56,7 @@ const authInitProps: AuthInitProps = {
   mapUserToJwtPayload,
 };
 
-const authLib = new AuthLib(authInitProps);
+const authLib = new JWTAuthLib(authInitProps);
 ```
 
 you can also Update the Configurations by Calling The **`init()`** Method on the AuthLib Instance
