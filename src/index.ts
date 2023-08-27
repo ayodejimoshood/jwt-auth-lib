@@ -1,1 +1,1 @@
-export { JWTAuthLib, Extractor } from "./lib";
+export * from "./lib"

@@ -3,7 +3,7 @@
 
 # website: 
 
-🌏 - visit our website at https://jwtauthlib.netlify.app, to explore and read more about library usage 
+🌏 - visit our website at https://jwtauthlib.co, to explore and read more about library usage 
 
 ## Purpose
 

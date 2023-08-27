@@ -1,2 +1,2 @@
-export { JWTAuthLib, Extractor } from "./lib";
+export * from "./lib";
 //# sourceMappingURL=index.d.ts.map
