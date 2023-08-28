@@ -29,7 +29,7 @@ const getConfig = (
       configFile: "tsconfig.json",
     },
   };
-
+  // console.log(env["type"]);
   return {
     entry: entryOutput[env["type"] || "default"].entry,
     target: "node",
@@ -76,9 +76,11 @@ const getConfig = (
         src: path.resolve(__dirname, "src"),
       },
     },
+
     output: {
       path: path.join(__dirname, entryOutput[env["type"] || "default"].output),
       filename: "index.js",
+      libraryTarget: env["type"] === "package" ? "umd" : undefined,
     },
     optimization: {
       moduleIds: "deterministic",
