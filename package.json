@@ -1,6 +1,6 @@
 {
   "name": "jwt-auth-lib",
-  "version": "1.0.10",
+  "version": "1.0.12",
   "description": "JWT Authentication Library for nodejs applications, designed to simplify and secure the authentication process, providing straightforward way to handle user authentication and token management, uing JWT and Redis for efficient token storage.",
   "main": "dist/index",
   "types": "types/index",
