@@ -5,13 +5,13 @@
 
 🌏 - visit our website at https://jwtauthlib.co, to explore and read more about library usage 
 
-## Purpose
-
-JwtAuthLib is a powerful authentication library for Node.js applications, designed to simplify and secure the authentication process. It provides a straightforward way to handle user authentication and token management, using JSON Web Tokens (JWT) and Redis for efficient token storage.
-
 ## Feedback &amp; Reviews
 
 Kindly leave a review/feedback message of this library on how it can be improved at https://jwtauthlib.co/contact
+
+## Purpose
+
+JwtAuthLib is a powerful authentication library for Node.js applications, designed to simplify and secure the authentication process. It provides a straightforward way to handle user authentication and token management, using JSON Web Tokens (JWT) and Redis for efficient token storage.
 
 ## Installation
 
