@@ -98,6 +98,8 @@ class JWTAuthLib {
   private validateFns: Record<string, ValidateFn> = {};
   public mapUserToJwtPayload = defaultInitProps.mapUserToJwtPayload;
   private tokenRepository: Repository | undefined;
+    static ACCESS: any;
+    ALLOWED_ROUTES: any;
 
   constructor(props: AuthInitProps = defaultInitProps) {
     this.init(props, !!props.redisUrl || !!props.redisConfig);

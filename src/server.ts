@@ -19,7 +19,7 @@ type RegisterPayload = {
   password: string;
 };
 
-const app: Express = express();
+export const app: Express = express();
 
 const AuthStrategy = new JWTAuthLib();
 
