@@ -1,6 +1,7 @@
-// import { AuthInitProps } from '../lib/index';
+// unit testing for all library functions
+
 import { JWTAuthLib, AuthInitProps } from "../lib/index";
-import { Request, Response, Router, NextFunction } from "express";
+import { Request, Response, Router } from "express";
 import APP_CONFIG from "../_config";
 
 const mockRequest = {} as Request;
