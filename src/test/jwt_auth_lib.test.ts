@@ -1,13 +1,7 @@
 // import { AuthInitProps } from '../lib/index';
 import { JWTAuthLib, AuthInitProps } from "../lib/index";
-import TokenType from "../lib/jwt_auth_lib";
 import { Request, Response, Router, NextFunction } from "express";
 import APP_CONFIG from "../_config";
-import Extractor from "../lib/helpers/extractors";
-// import jwt, { TokenExpiredError } from "jsonwebtoken";
-import jwt, { JsonWebTokenError } from "jsonwebtoken";
-import argon2 from "argon2";
-import ms from "ms";
 
 const mockRequest = {} as Request;
 const mockResponse = {
@@ -218,7 +212,6 @@ describe("JWTAuthLib", () => {
   });
 
   describe("JWTAuthLib", () => {
-    const mockAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlblR5cGUiOiJyZWZyZXNoIiwic3ViIjoiSlhyT1hZczJuS0xwbURTMCIsImVtYWlsIjoiZmlzc3ljb29sekBnbWFpbC5jb20iLCJpYXQiOjE2OTQ5NzU3NzIsImV4cCI6MTY5NTU4MDU3MiwiYXVkIjpbImF5by54eXoiXSwiaXNzIjoiYXBpLmF5by54eXoiLCJqdGkiOiI3MDg5NTQ2Zi1kMDVlLTQ3MTItOTMwYS1hN2U1YmMwZmU3ZDEifQ.Riutx4E_mVIfBDWGRJUhqcX8zpn7cmBH0IXrFkxJN0A';
 
     beforeEach(() => {
       // Initialize JWTAuthLib with default initialization properties
@@ -245,48 +238,6 @@ describe("JWTAuthLib", () => {
     afterEach(() => {
       jest.clearAllMocks();
     });
-
-    // Mock request and response objects
-    //   const mockRequest = {} as Request;
-    //   const mockResponse = {
-    //     status: jest.fn().mockReturnThis(),
-    //     json: jest.fn()
-    //   } as unknown as Response;
-    //   const next = jest.fn();
-
-    // it("should authenticate a valid token", async () => {
-    //   mockRequest.headers = {
-    //     authorization:
-    //       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlblR5cGUiOiJyZWZyZXNoIiwic3ViIjoiSlhyT1hZczJuS0xwbURTMCIsImVtYWlsIjoiZmlzc3ljb29sekBnbWFpbC5jb20iLCJpYXQiOjE2OTQ5NzU3NzIsImV4cCI6MTY5NTU4MDU3MiwiYXVkIjpbImF5by54eXoiXSwiaXNzIjoiYXBpLmF5by54eXoiLCJqdGkiOiI3MDg5NTQ2Zi1kMDVlLTQ3MTItOTMwYS1hN2U1YmMwZmU3ZDEifQ.Riutx4E_mVIfBDWGRJUhqcX8zpn7cmBH0IXrFkxJN0A",
-    //   };
-
-    //   await jwtAuthLib.handleRefreshToken()(mockRequest, mockResponse, next);
-
-    //   // Assert the behavior based on successful authentication
-    //   expect(next).toHaveBeenCalled();
-    //   expect(mockResponse.status).not.toHaveBeenCalled();
-    //   expect(mockResponse.json).not.toHaveBeenCalled();
-    // });
-
-    // it('should authenticate a valid token', async () => {
-    //     const mockRequest = {
-    //         headers: { Authorization: `Bearer validAccessToken` }, // Replace with a valid token
-    //     } as unknown as Request;
-    //     const mockResponse = {
-    //         status: jest.fn().mockReturnThis(),
-    //         json: jest.fn(),
-    //     } as unknown as Response;
-    //     const next = jest.fn();
-    
-    //     await jwtAuthLib.authenticateJwt()(mockRequest, mockResponse, next);
-    
-    //     // Assert the behavior based on successful authentication
-    //     expect(next).toHaveBeenCalled();
-    //     expect(mockResponse.status).not.toHaveBeenCalled();
-    //     expect(mockResponse.json).not.toHaveBeenCalled();
-    //   });
-      
-      
 
     it("should handle authentication failure for an invalid token", async () => {
       const mockToken =
@@ -326,19 +277,6 @@ describe("JWTAuthLib", () => {
   });
 
   describe("handleRefreshToken", () => {
-    // it("should handle refreshing a valid token", async () => {
-    //   const mockToken = "validRefreshToken"; // Replace with a valid refresh token
-    //   mockRequest.headers = {
-    //     authorization: `Bearer ${mockToken}`,
-    //   };
-
-    //   await jwtAuthLib.handleRefreshToken()(mockRequest, mockResponse, next);
-
-    //   // Assert the behavior based on successful token refresh
-    //   expect(next).not.toHaveBeenCalled();
-    //   expect(mockResponse.status).toHaveBeenCalledWith(200);
-    //   expect(mockResponse.json).toHaveBeenCalled();
-    // });
 
     it("should handle refreshing a valid token", async () => {
       mockRequest.headers = {
@@ -352,23 +290,6 @@ describe("JWTAuthLib", () => {
       expect(mockResponse.status).toHaveBeenCalledWith(401); // Change the expected status to 401
       expect(mockResponse.json).toHaveBeenCalled();
     });
-
-    // it("should handle refreshing a token with an invalid token type", async () => {
-    //   const mockToken = "invalidAccessToken"; // Replace with an invalid token
-    //   mockRequest.headers = {
-    //     authorization: `Bearer ${mockToken}`,
-    //   };
-
-    //   await jwtAuthLib.handleRefreshToken()(mockRequest, mockResponse, next);
-
-    //   // Assert the behavior based on an invalid token type
-    //   expect(next).not.toHaveBeenCalled();
-    //   expect(mockResponse.status).toHaveBeenCalledWith(401);
-    //   expect(mockResponse.json).toHaveBeenCalledWith({
-    //     message: "Invalid Token",
-    //     err: "Invalid Token",
-    //   });
-    // });
 
     it("should handle refreshing an expired token", async () => {
       const expiredToken =
@@ -468,33 +389,6 @@ describe("JWTAuthLib", () => {
       });
       expect(next).not.toHaveBeenCalled();
     });
-  
-    // it('should handle revoking an expired token', async () => {
-    //     const expiredToken = 'evJhbGci0iJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJob2tlbIR5cGUi0iJyZWZyic3ViIjoiSthyT1hZczJusOxwbURTMCISImVtYWlsIjoiZm1zc31jb29sekBnbWFpbC5jb201LCJpYXQ10jE20TMyMDY5NjksImV4CCI6MTY5MZgxMTc20SwiXVkIjpbImF5by54eXoiXSwiaXNZIjoiYXBpLmF5by54eXoiLCJqdGki0iJmZGFhOTQ5Ny0zMzE2LTQ30TItYTA4Yi0wZWUXOTQ00TEwNmIifQ.uVfHbksby-HLAqujRSXpM6sVgRHms5vFwajkOxFnIQk';
-    //     const mockRequest = {
-    //       headers: { Authorization: `Bearer ${expiredToken}` },
-    //     } as unknown as Request;
-    //     const mockResponse = {
-    //       status: jest.fn().mockReturnThis(),
-    //       json: jest.fn(),
-    //     } as unknown as Response;
-    //     const next = jest.fn();
-      
-    //     // Mock jwt.verify to throw an error for an expired token
-    //     (jwt.verify as jest.Mock).mockImplementation(() => {
-    //       throw new JsonWebTokenError('Token has expired');
-    //     });
-      
-    //     await jwtAuthLib.handleRevokeAccessToken()(mockRequest, mockResponse, next);
-      
-    //     // Assert the behavior based on an expired token
-    //     // expect(mockResponse.status).toHaveBeenCalledWith(200);
-    //     expect(mockResponse.status).toHaveBeenCalledWith(403);
-    //     expect(mockResponse.json).toHaveBeenCalledWith({
-    //       message: 'Sessioned Timed Out',
-    //     });
-    //     expect(next).not.toHaveBeenCalled();
-    //   });
 
     it("should handle revoking an expired token", async () => {
         const expiredToken = "expiredTokenHere"; // expired refresh token
@@ -512,10 +406,6 @@ describe("JWTAuthLib", () => {
         });
         expect(next).not.toHaveBeenCalled();
       });
-      
-      
-      
-      
       
   });
 
@@ -569,8 +459,6 @@ describe("JWTAuthLib", () => {
       authenticateJwtSpy.mockRestore();
     });
   });
-  
-  
 
   describe("getAuthRouter", () => {
     it("should register routes and return the router", () => {
