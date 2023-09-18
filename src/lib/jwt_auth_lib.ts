@@ -100,6 +100,7 @@ class JWTAuthLib {
   private tokenRepository: Repository | undefined;
     static ACCESS: any;
     ALLOWED_ROUTES: any;
+    static REFRESH: any;
 
   constructor(props: AuthInitProps = defaultInitProps) {
     this.init(props, !!props.redisUrl || !!props.redisConfig);

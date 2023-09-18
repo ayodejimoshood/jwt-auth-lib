@@ -48,6 +48,9 @@ declare class JWTAuthLib {
         [index: string]: any;
     };
     private tokenRepository;
+    static ACCESS: any;
+    ALLOWED_ROUTES: any;
+    static REFRESH: any;
     constructor(props?: AuthInitProps);
     init({ jwtConfig, redisUrl, redisConfig, authRoute, mapUserToJwtPayload, }: AuthInitProps, instantiateRedis?: boolean): void;
     registerRedisEvents(): void;

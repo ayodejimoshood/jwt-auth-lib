@@ -1,4 +1,4 @@
-// jest.config.js or jest.config.ts
+// jest.config.ts
 
 import type { Config } from '@jest/types';
 
@@ -10,6 +10,7 @@ const config: Config.InitialOptions = {
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
   },
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 };
 
 export default config;
